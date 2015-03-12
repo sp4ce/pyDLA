@@ -45,7 +45,7 @@ class Visualization:
             self.w.create_line(x1, y1, x2, y2)
 
         # Draw some status text
-        self.particules = None
+        self.particles = None
         self.text = self.w.create_text(25, 0, anchor=NW,
                                        text=self._status_string(0, 0))
         self.time = 0
@@ -62,8 +62,8 @@ class Visualization:
         return (250 + 450 * ((x - self.width / 2.0) / self.max_dim),
                 250 + 450 * ((self.height / 2.0 - y) / self.max_dim))
 
-    def _draw_particule(self, position, direction):
-        "Returns a polygon representing a particule with the specified parameters."
+    def _draw_particle(self, position, direction):
+        "Returns a polygon representing a particle with the specified parameters."
         x, y = position.x, position.y
         d1 = direction + 165
         d2 = direction - 165
@@ -74,29 +74,29 @@ class Visualization:
                                   y + 0.6 * math.cos(math.radians(d2)))
         return self.w.create_polygon([x1, y1, x2, y2, x3, y3], fill="red")
 
-    def update(self, room, particules):
-        "Redraws the visualization with the specified room and particules state."
+    def update(self, room, particles):
+        "Redraws the visualization with the specified room and particles state."
         # Removes a gray square for any tiles have been aggregated.
         for i in range(self.width):
             for j in range(self.height):
                 if room.isTileAggregated(i, j):
                     self.w.delete(self.tiles[(i, j)])
         # Delete all existing robots.
-        if self.particules:
-            for particule in self.particules:
-                self.w.delete(particule)
+        if self.particles:
+            for particle in self.particles:
+                self.w.delete(particle)
                 self.master.update_idletasks()
         # Draw new robots
-        self.particules = []
-        for particule in particules:
-            pos = particule.position
+        self.particles = []
+        for particle in particles:
+            pos = particle.position
             x, y = pos.x, pos.y
             x1, y1 = self._map_coords(x - 0.08, y - 0.08)
             x2, y2 = self._map_coords(x + 0.08, y + 0.08)
-            self.particules.append(self.w.create_oval(x1, y1, x2, y2,
+            self.particles.append(self.w.create_oval(x1, y1, x2, y2,
                                                   fill = "black"))
-            self.particules.append(
-                self._draw_particule(particule.position, particule.direction))
+            self.particles.append(
+                self._draw_particle(particle.position, particle.direction))
         # Update text
         self.w.delete(self.text)
         self.time += 1

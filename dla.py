@@ -4,7 +4,7 @@ from classes import *
 
 import dla_visualize;
 
-def simulation(seeds, speed, width, height, particule, num_particules, total_particules):
+def simulation(seeds, speed, width, height, particle, num_particles, total_particles):
     """
     Run a diffusion limited aggregation simulation.
 
@@ -12,9 +12,9 @@ def simulation(seeds, speed, width, height, particule, num_particules, total_par
     speed: a float (speed > 0)
     width: an int (width > 0)
     height: an int (height > 0)
-    particule: class of particule to be instantiated
-    num_particules: an int, the number of particule present simultaneously
-    total_particules: an int, the number of total particule to shoot.
+    particle: class of particle to be instantiated
+    num_particles: an int, the number of particle present simultaneously
+    total_particles: an int, the number of total particle to shoot.
     """
     anim = dla_visualize.Visualization(width, height, 0.001)
     # time.sleep(5)
@@ -22,30 +22,30 @@ def simulation(seeds, speed, width, height, particule, num_particules, total_par
     # Initialize the room.
     f = Field(width, height, seeds)
 
-    # Initialize the number of initial particules
-    particules = []
-    count = num_particules
-    for i in range(0, num_particules):
-        particules.append(particule(f, speed))
+    # Initialize the number of initial particles
+    particles = []
+    count = num_particles
+    for i in range(0, num_particles):
+        particles.append(particle(f, speed))
 
-    # We run the simulation until all the particule has been created
-    while count <= total_particules and 0 < len(particules):
+    # We run the simulation until all the particle has been created
+    while count <= total_particles and 0 < len(particles):
         display = False
-        for p in particules:
-            # For each particule, update the position.
+        for p in particles:
+            # For each particle, update the position.
             p.updatePositionAndAggregate()
             if not p.valid or p.aggregated:
-                # Remove the particule from the sample if it is not valid.
-                particules.remove(p)
-                if count < total_particules:
-                    # Add a new particule if there is some more place for it.
-                    particules.append(particule(f, speed))
+                # Remove the particle from the sample if it is not valid.
+                particles.remove(p)
+                if count < total_particles:
+                    # Add a new particle if there is some more place for it.
+                    particles.append(particle(f, speed))
                     count += 1
                 if p.aggregated:
                     display = True
 
         if display:
-            anim.update(f, particules)
+            anim.update(f, particles)
 
     anim.done()
 
