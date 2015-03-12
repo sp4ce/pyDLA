@@ -70,13 +70,16 @@ class Field(object):
                     count += 1
         return count
 
-    def getRandomPosition(self):
+    def getRandomPosition(self, radius = 0):
         """
         Return a random position inside the room.
 
         returns: a Position object.
         """
-        return Position(random.uniform(0, self.width), random.uniform(0, self.height))
+        x, y  = random.uniform(0, self.width), random.uniform(0, self.height)
+        while (x**2 + y**2 < radius**2):
+            x, y  = random.uniform(0, self.width), random.uniform(0, self.height)
+        return Position(x, y)
 
     def isPositionInRoom(self, pos):
         """

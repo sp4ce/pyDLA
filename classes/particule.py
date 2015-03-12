@@ -21,7 +21,8 @@ class Particule(object):
         """
         self.field = field
         self.speed = speed
-        self.position = field.getRandomPosition()
+        radius = (((field.width/2)**2 + (field.height/2)**2))**0.5 / 2
+        self.position = field.getRandomPosition(radius)
         self.direction = random.randint(0, 360)
         self.valid = True
         self.aggregated = False
