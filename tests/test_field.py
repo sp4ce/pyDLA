@@ -7,7 +7,8 @@ class TestField:
     def test_seeds(self):
         random.seed(0)
         f = Field(10, 10, 2)
-        assert f.getNumAggregatedTiles() == 2
+        # We generate only one seed.
+        assert f.getNumAggregatedTiles() == 1
 
     def test_getNumTiles(self):
         f = Field(10, 10)

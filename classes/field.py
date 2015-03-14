@@ -24,6 +24,7 @@ class Field(object):
         self.tiles = [[False] * height for x in range(width)]
 
         # Generate the seeds
+        # TODO(baptiste): Pattern to generate more then one seed
         for i in range(0, seeds):
             self.aggregateTileAtPosition(Position(width / 2, height / 2))
 

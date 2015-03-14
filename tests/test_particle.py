@@ -12,9 +12,12 @@ class TestParticle:
         assert p.valid
 
     def test_standard(self):
-        random.seed(0)
-        f = Field(10, 10, 1)
+        f = Field(10, 10)
+        # Set a aggregated position.
+        f.aggregateTileAtPosition(Position(8, 7))
         assert f.isTileAggregated(8, 7)
+        # Set a particule close to the aggregated position
+        # and test it will aggregate.
         p = StandardParticle(f, 1)
         p.position = Position(8, 6)
         p.aggregate()
