@@ -2,4 +2,7 @@ from classes import *
 
 import dla
 
-dla.simulation(1, 1, 200, 200, StandardParticle, 100, 10000)
+import random
+random.seed(0)
+
+dla.simulation(1, 1, 50, 50, StandardParticle, 100, 1000)

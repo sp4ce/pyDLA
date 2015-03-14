@@ -1,10 +1,12 @@
+import math
 import random
 
+from aggregate import Aggregate
 from position import Position
 
 class Field(object):
     """
-    A Field represents a rectangular region containing tiles tha initially is empty.
+    A Field represents a rectangular region containing tiles that initially is empty.
 
     A room has a width and a height and contains (width * height) tiles. At any
     particular time, each of these tiles is either part of the aggregate or not.
@@ -16,94 +18,80 @@ class Field(object):
         Initially, no tiles in the room is part of the aggregate.
 
         width: an integer > 0
-        height: an integer > 0
+        height: an integer > 02 *
         seeds: an integer >= 0
         """
         self.width = width
         self.height = height
-        self.tiles = [[False] * height for x in range(width)]
+        self.radius = min(width, height) / float(2)
 
         # Generate the seeds
         # TODO(baptiste): Pattern to generate more then one seed
+        # The barycentre of all the seeds should be (0, 0)
+        # the radius of all aggregates should be inside the radius of the field.
+        self.aggregates = []
         for i in range(0, seeds):
-            self.aggregateTileAtPosition(Position(width / 2, height / 2))
+            self.aggregates.append(Aggregate(self.radius))
 
-    def aggregateTileAtPosition(self, pos):
+    def count(self):
         """
-        Mark the tile under the position POS as cleaned.
+        Return the number of position in the field.
 
-        Assumes that POS represents a valid position inside this room.
-
-        pos: a Position
-        """
-        self.tiles[int(pos.x)][int(pos.y)] = True
-
-    def isTileAggregated(self, m, n):
-        """
-        Return True if the tile (m, n) has been cleaned.
-
-        Assumes that (m, n) represents a valid tile inside the room.
-
-        m: an integer
-        n: an integer
-        returns: True if (m, n) is cleaned, False otherwise
-        """
-        return self.tiles[m][n]
-
-    def getNumTiles(self):
-        """
-        Return the total number of tiles in the room.
-
-        returns: an integer
+        returns: an int.
         """
         return self.width * self.height
 
-    def getNumAggregatedTiles(self):
+    def isAggregated(self, x ,y):
+        """
+        Test if the given position is aggregated
+
+        x: a float, the position x
+        y: a float, the position y
+        """
+        for aggregate in self.aggregates:
+            if (aggregate.contains(Position(x, y))):
+                return True
+        return False
+
+    def countAggregated(self):
         """
         Return the total number of clean tiles in the room.
 
         returns: an integer
         """
         count = 0
-        for line in self.tiles:
-            for title in line:
-                if title:
-                    count += 1
+        for aggregate in self.aggregates:
+            count += aggregate.count()
         return count
 
-    def getRandomPosition(self, radius = 0):
+    def getRandomPosition(self):
         """
-        Return a random position inside the room.
+        Return a random position outside the radius of the seed.
 
         returns: a Position object.
         """
-        x, y  = random.uniform(0, self.width), random.uniform(0, self.height)
-        while (x**2 + y**2 < radius**2):
-            x, y  = random.uniform(0, self.width), random.uniform(0, self.height)
-        return Position(x, y)
+        # Get a random position in polar coordinate
+        radius = random.uniform(self.radius, 2 * self.radius);
+        angle = random.uniform(0, 360)
 
-    def isPositionInRoom(self, pos):
-        """
-        Return True if pos is inside the room.
+        # Return the position in descartes coordinate.
+        return Position(radius * math.cos(angle), radius * math.sin(angle))
 
-        pos: a Position object.
-        returns: True if pos is in the room, False otherwise.
+    def isParticleInField(self, particle):
         """
-        return 0 <= pos.x and pos.x < self.width and 0 <= pos.y and pos.y < self.height
+        Return True if pos is inside the field.
 
-    def isPositionNextToAggregate(self, pos):
+        particle: a Particle object.
+        returns: True if particle is in the field, False otherwise.
         """
-        Return True if pos is next to an aggregated tile.
+        x, y = particle.position.x, particle.position.y
+        return abs(x) <= self.width / float(2) and abs(y) <= self.height / float(2)
+
+    def isPositionOutsideDoubleRadius(self, position):
+        """
+        Return True is the pos is outside the double of the radius from the seed
 
         pos: a Position object
-        returns: True if pos is next to an aggregated tile, False otherwise.
+        returns: True if the pos is outside the double of the radius, False otherwise.
         """
-        # Test all adjacent positions.
-        for i in [-1, 0, 1]:
-            for j in [-1, 0, 1]:
-                # Return True as soon as it finds an aggregated tile.
-                p = Position(pos.x + i, pos.y + j)
-                if self.isPositionInRoom(p) and self.isTileAggregated(int(p.x), int(p.y)):
-                    return True
-
-        return False
+        return (2 * self.radius)**2 <= position.x**2 + position.y**2

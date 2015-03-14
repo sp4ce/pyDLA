@@ -4,30 +4,52 @@ from classes import *
 
 class TestField:
 
-    def test_seeds(self):
+    def test_init(self):
+        field = Field(10, 10)
+        assert field.radius == 5
+        field = Field(10, 15)
+        assert field.radius == 5
+        field = Field(15, 10)
+        assert field.radius == 5
+
+    def test_initWithSeed(self):
+        field = Field(10, 10, 1)
+        assert len(field.aggregates) == 1
+        assert field.aggregates[0].radius == 5
+
+    def test_count(sefl):
+        field = Field(10, 10)
+        assert field.count() == 100
+
+    def test_isAggregated(self):
+        field = Field(10, 10, 1)
+        assert field.isAggregated(0.5, 0.5)
+
+    def test_countAggregated(self):
+        field = Field(10, 10, 1)
+        assert field.countAggregated() == 1
+
+    def test_getRandomPosition(self):
+        field = Field(10, 10)
         random.seed(0)
-        f = Field(10, 10, 2)
-        # We generate only one seed.
-        assert f.getNumAggregatedTiles() == 1
+        position = field.getRandomPosition()
+        assert "(-8.28, 4.05)" == str(position)
 
-    def test_getNumTiles(self):
-        f = Field(10, 10)
-        assert f.getNumTiles() == 100
+    def test_isParticleInField(self):
+        field = Field(10, 10)
+        p = Particle(field, 1)
+        p.position = Position(5, 5)
+        assert field.isParticleInField(p)
+        p.position = Position(-5, -5)
+        assert field.isParticleInField(p)
+        p.position = Position(5.1, 5)
+        assert not field.isParticleInField(p)
+        p.position = Position(5, 5.1)
+        assert not field.isParticleInField(p)
 
-    def test_getNumAggregatedTiles(self):
-        f = Field(10, 10)
-        assert f.getNumAggregatedTiles() == 0
-
-    def test_aggregateTileAtPosition(self):
-        f = Field(10, 10)
-        f.aggregateTileAtPosition(Position(5.1, 4.9))
-        assert f.getNumAggregatedTiles() == 1
-        assert f.isTileAggregated(5, 4)
-
-    def test_isPositionNextToAggregate(self):
-        f = Field(10, 10)
-        p = Position(5.1, 4.9)
-        f.aggregateTileAtPosition(p)
-        assert f.isPositionNextToAggregate(p)
-        assert f.isPositionNextToAggregate(Position(p.x + 1, p.y))
-        assert f.isPositionNextToAggregate(Position(p.x, p.y + 1))
+    def test_isPositionOutsideDoubleRadius(self):
+        field = Field(10, 10)
+        assert not field.isPositionOutsideDoubleRadius(Position(0, 9.9))
+        assert field.isPositionOutsideDoubleRadius(Position(0, 10))
+        assert not field.isPositionOutsideDoubleRadius(Position(9.9, 0))
+        assert field.isPositionOutsideDoubleRadius(Position(10, 0))

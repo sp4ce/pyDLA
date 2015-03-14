@@ -11,3 +11,8 @@ class TestPosition:
         p = Position(0.2, 1.5)
         new_p = p.getNewPosition(90, 3)
         assert str(new_p) == "(3.20, 1.50)"
+
+    def test_distance(self):
+        p = Position(0.2, 1.5)
+        d = p.distance(Position(3.2, 5.5))
+        assert d == 5

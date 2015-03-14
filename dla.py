@@ -30,7 +30,7 @@ def simulation(seeds, speed, width, height, particle, num_particles, total_parti
 
     # We run the simulation until all the particle has been created
     while count <= total_particles and 0 < len(particles):
-        display = False
+        update = False
         for p in particles:
             # For each particle, update the position.
             p.updatePositionAndAggregate()
@@ -42,11 +42,10 @@ def simulation(seeds, speed, width, height, particle, num_particles, total_parti
                     particles.append(particle(f, speed))
                     count += 1
                 if p.aggregated:
-                    display = True
+                    update = True
 
-        if display:
+        if update:
             anim.update(f, particles)
 
+    anim.update(f, particles)
     anim.done()
-
-    print f.getNumAggregatedTiles() / float(f.getNumTiles())

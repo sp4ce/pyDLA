@@ -34,5 +34,13 @@ class Position(object):
         new_y = old_y + delta_y
         return Position(new_x, new_y)
 
+    def distance(self, position):
+        """
+        Return the distance between the current position and the given position.
+
+        returns: float, the distance.
+        """
+        return ((position.x - self.x)**2 +  (position.y - self.y)**2)**0.5
+
     def __str__(self):
         return "(%0.2f, %0.2f)" % (self.x, self.y)

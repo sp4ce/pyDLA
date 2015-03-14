@@ -21,8 +21,7 @@ class Particle(object):
         """
         self.field = field
         self.speed = speed
-        radius = (((field.width/2)**2 + (field.height/2)**2))**0.5 / 2
-        self.position = field.getRandomPosition(radius)
+        self.position = field.getRandomPosition()
         self.direction = random.randint(0, 360)
         self.valid = True
         self.aggregated = False
@@ -39,7 +38,7 @@ class Particle(object):
     def updatePosition(self):
         raise NotImplementedError # don't change this!
 
-    def aggregate():
+    def aggregate(self):
         raise NotImplementedError # don't change this!
 
 
@@ -55,12 +54,14 @@ class StandardParticle(Particle):
         self.direction = random.randint(0, 360)
         self.position = self.position.getNewPosition(self.direction, self.speed)
 
-    def aggregate(self):
         # If the particle move outside the room, just reject it.
-        if not self.field.isPositionInRoom(self.position):
+        if self.field.isPositionOutsideDoubleRadius(self.position):
             self.valid = False
 
+    def aggregate(self):
         # If the particle is next to the aggregate, aggregate it.
-        elif self.field.isPositionNextToAggregate(self.position):
-            self.field.aggregateTileAtPosition(self.position)
-            self.aggregated = True
+        for aggregate in self.field.aggregates:
+            if aggregate.isAdjacent(self.position):
+                aggregate.add(self.position)
+                self.aggregated = True
+                return
