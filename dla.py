@@ -16,7 +16,8 @@ def simulation(seeds, speed, width, height, particle, num_particles, total_parti
     num_particles: an int, the number of particle present simultaneously
     total_particles: an int, the number of total particle to shoot.
     """
-    anim = dla_visualize.Visualization(width, height, 0.001)
+    anim_speed = 0.01
+    anim = dla_visualize.Visualization(width, height, anim_speed)
     # time.sleep(5)
 
     # Initialize the room.
@@ -45,6 +46,17 @@ def simulation(seeds, speed, width, height, particle, num_particles, total_parti
                     update = True
 
         if update:
+            # Update the animation only if the aggregate has changed
+            if f.aggregateSize() > f.radius:
+                # if the aggregate arrived to the radius size, we double the
+                # size of the field and put the aggregate into this new field.
+                width *= 2
+                height *= 2
+                new_f = Field(width, height)
+                new_f.aggregates = f.aggregates
+                f = new_f
+                anim.init(width, height)
+
             anim.update(f, particles)
 
     anim.update(f, particles)

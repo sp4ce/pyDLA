@@ -6,47 +6,27 @@ from Tkinter import *
 class Visualization:
 
     def __init__(self, width, height, delay = 0.2):
-        "Initializes a visualization with the specified parameters."
+        """
+        Initializes a visualization with the specified parameters.
+        """
         # Number of seconds to pause after each frame
         self.delay = delay
 
-        self.max_dim = max(width, height)
-        self.width = width
-        self.height = height
-
         # Initialize a drawing surface
         self.master = Tk()
-        self.w = Canvas(self.master, width=500, height=500)
+        self.w = Canvas(self.master, width = 500, height = 500)
         self.w.pack()
         self.master.update()
 
-        # Draw a backing and lines
-        x1, y1 = self._map_coords(-width / 2, height / 2)
-        x2, y2 = self._map_coords(width / 2, -height / 2)
-        self.w.create_rectangle(x1, y1, x2, y2, fill = "white")
-
-        # Draw gray squares for empty tiles
-        self.tiles = {}
-        for i in range(-width / 2, width / 2):
-            for j in range(-height / 2, height / 2):
-                x1, y1 = self._map_coords(i, j)
-                x2, y2 = self._map_coords(i + 1, j + 1)
-                self.tiles[(i, j)] = self.w.create_rectangle(x1, y1, x2, y2, fill = "gray")
-
-        # Draw gridlines
-        for i in range(-width / 2, width / 2):
-            x1, y1 = self._map_coords(i, -height / 2)
-            x2, y2 = self._map_coords(i, height / 2)
-            self.w.create_line(x1, y1, x2, y2)
-        for i in range(-height / 2, height / 2):
-            x1, y1 = self._map_coords(-width / 2, i)
-            x2, y2 = self._map_coords(width / 2, i)
-            self.w.create_line(x1, y1, x2, y2)
+        # Initialize the dimension
+        self.init(width, height)
 
         # Draw some status text
         self.particles = None
-        self.text = self.w.create_text(25, 0, anchor=NW, text=self._status_string(0, 0))
+        self.text = self.w.create_text(25, 0, anchor = NW, text = self._status_string(0, 0))
         self.time = 0
+
+        # Update the drawing
         self.master.update()
 
     def _status_string(self, time, num_aggregated_tiles):
@@ -75,6 +55,38 @@ class Visualization:
         x3, y3 = self._map_coords(x + 0.6 * math.sin(math.radians(d2)),
                                   y + 0.6 * math.cos(math.radians(d2)))
         return self.w.create_polygon([x1, y1, x2, y2, x3, y3], fill="red")
+
+    def init(self, width, height):
+        """
+        Init the grid with the given dimension.
+        """
+        # Update the size of the field
+        self.width = width
+        self.height = height
+        self.max_dim = max(width, height)
+
+        # Draw a backing and lines
+        x1, y1 = self._map_coords(-width / 2, height / 2)
+        x2, y2 = self._map_coords(width / 2, -height / 2)
+        self.w.create_rectangle(x1, y1, x2, y2, fill = "white")
+
+        # Draw gray squares for empty tiles
+        self.tiles = {}
+        for i in range(-width / 2, width / 2):
+            for j in range(-height / 2, height / 2):
+                x1, y1 = self._map_coords(i, j)
+                x2, y2 = self._map_coords(i + 1, j + 1)
+                self.tiles[(i, j)] = self.w.create_rectangle(x1, y1, x2, y2, fill = "gray")
+
+        # Draw gridlines
+        for i in range(-width / 2, width / 2):
+            x1, y1 = self._map_coords(i, -height / 2)
+            x2, y2 = self._map_coords(i, height / 2)
+            self.w.create_line(x1, y1, x2, y2)
+        for i in range(-height / 2, height / 2):
+            x1, y1 = self._map_coords(-width / 2, i)
+            x2, y2 = self._map_coords(width / 2, i)
+            self.w.create_line(x1, y1, x2, y2)
 
     def update(self, field, particles):
         """

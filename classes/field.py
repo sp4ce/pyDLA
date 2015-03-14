@@ -95,3 +95,14 @@ class Field(object):
         returns: True if the pos is outside the double of the radius, False otherwise.
         """
         return (2 * self.radius)**2 <= position.x**2 + position.y**2
+
+    def aggregateSize(self):
+        """
+        Return the size of the aggregate from the center.
+        """
+        size = 0
+        for aggregate in self.aggregates:
+            for x in aggregate.particles:
+                for y in aggregate.particles[x]:
+                    size = max(size, (x**2 + y**2)**0.5)
+        return size

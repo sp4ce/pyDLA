@@ -53,3 +53,11 @@ class TestField:
         assert field.isPositionOutsideDoubleRadius(Position(0, 10))
         assert not field.isPositionOutsideDoubleRadius(Position(9.9, 0))
         assert field.isPositionOutsideDoubleRadius(Position(10, 0))
+
+    def test_aggregateSize(self):
+        field = Field(10, 10)
+        assert field.aggregateSize() == 0
+
+        field = Field(10, 10, 1)
+        field.aggregates[0].add(Position(3, 4))
+        assert field.aggregateSize() == 5
