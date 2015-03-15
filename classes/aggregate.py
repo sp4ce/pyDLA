@@ -6,7 +6,7 @@ class Aggregate:
     Define an aggregate
     """
 
-    def __init__(self, radius,  seed = Position(0, 0)):
+    def __init__(self,  seed = Position(0, 0)):
         """
         Initialize an aggregate with the given seed position.
 
@@ -14,7 +14,6 @@ class Aggregate:
         seed: a Position, by default in the (0, 0)
         """
         self.seed = seed
-        self.radius = radius
         self.particles = {int(seed.x) : { int(seed.y): True }}
 
     def contains(self, position):

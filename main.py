@@ -7,5 +7,5 @@ import dla
 
 #import profile
 
-dla.simulation(1, 1, 20, 20, StandardParticle, 100, 500)
+dla.simulation(5, 1, 50, 50, StandardParticle, 100, 500)
 #profile.run('')

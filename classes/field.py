@@ -24,14 +24,26 @@ class Field(object):
         self.width = width
         self.height = height
         self.radius = min(width, height) / float(2)
-
-        # Generate the seeds
-        # TODO(baptiste): Pattern to generate more then one seed
-        # The barycentre of all the seeds should be (0, 0)
-        # the radius of all aggregates should be inside the radius of the field.
         self.aggregates = []
-        for i in range(0, seeds):
-            self.aggregates.append(Aggregate(self.radius))
+
+        if seeds > 5:
+            # Only take the number of seeds less or equal than 5.
+            raise ValueError("Number of seeds greater than 5 is not supported.")
+
+        if seeds == 1 or seeds == 5:
+            self.aggregates.append(Aggregate(Position(0, 0)))
+        if seeds == 2:
+            self.aggregates.append(Aggregate(Position(-width / 2, 0)))
+            self.aggregates.append(Aggregate(Position(width / 2, 0)))
+        if seeds == 3:
+            self.aggregates.append(Aggregate(Position(0, 3**0.5 * width / 6)))
+            self.aggregates.append(Aggregate(Position(-width / 2, -3**0.5 * width / 12)))
+            self.aggregates.append(Aggregate(Position(width / 2, -3**0.5 * width / 12)))
+        if seeds == 4 or seeds == 5:
+            self.aggregates.append(Aggregate(Position(-width / 2, height / 2)))
+            self.aggregates.append(Aggregate(Position(width / 2, height / 2)))
+            self.aggregates.append(Aggregate(Position(width / 2, -height / 2)))
+            self.aggregates.append(Aggregate(Position(-width / 2, -height / 2)))
 
     def count(self):
         """

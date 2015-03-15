@@ -15,7 +15,8 @@ class TestField:
     def test_initWithSeed(self):
         field = Field(10, 10, 1)
         assert len(field.aggregates) == 1
-        assert field.aggregates[0].radius == 5
+        assert field.aggregates[0].seed.x == 0
+        assert field.aggregates[0].seed.y == 0
 
     def test_count(sefl):
         field = Field(10, 10)
