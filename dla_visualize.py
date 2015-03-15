@@ -93,10 +93,10 @@ class Visualization:
         Redraws the visualization with the specified field and particles state.
         """
         # Removes a gray square for any tiles have been aggregated.
-        for i in range(-self.width / 2, self.width / 2):
-            for j in range(-self.height / 2, self.height / 2):
-                if field.isAggregated(i, j):
-                    self.w.delete(self.tiles[(i, j)])
+        for aggregate in field.aggregates:
+            for x in aggregate.particles:
+                for y in aggregate.particles[x]:
+                    self.w.delete(self.tiles[(x, y)])
 
         # Delete all existing particles.
         if self.particles:

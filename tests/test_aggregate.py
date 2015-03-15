@@ -31,7 +31,7 @@ class TestAggregate:
         p = Position(5.1, 4.9)
         aggregate.add(p)
 
-        assert aggregate.isAdjacent(p)
+        assert not aggregate.isAdjacent(p)
         assert aggregate.isAdjacent(Position(p.x + 1, p.y))
         assert aggregate.isAdjacent(Position(p.x, p.y + 1))
 

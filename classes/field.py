@@ -41,18 +41,6 @@ class Field(object):
         """
         return self.width * self.height
 
-    def isAggregated(self, x ,y):
-        """
-        Test if the given position is aggregated
-
-        x: a float, the position x
-        y: a float, the position y
-        """
-        for aggregate in self.aggregates:
-            if (aggregate.contains(Position(x, y))):
-                return True
-        return False
-
     def countAggregated(self):
         """
         Return the total number of clean tiles in the room.

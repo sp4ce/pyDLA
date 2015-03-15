@@ -59,5 +59,6 @@ def simulation(seeds, speed, width, height, particle, num_particles, total_parti
 
             anim.update(f, particles)
 
+    print "Done"
     anim.update(f, particles)
     anim.done()

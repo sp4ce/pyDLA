@@ -2,7 +2,10 @@ from classes import *
 
 import dla
 
-import random
-random.seed(0)
+#import random
+#random.seed(0)
 
-dla.simulation(1, 1, 20, 20, StandardParticle, 100, 10000)
+#import profile
+
+dla.simulation(1, 1, 20, 20, StandardParticle, 100, 500)
+#profile.run('')

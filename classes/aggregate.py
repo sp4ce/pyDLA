@@ -48,9 +48,13 @@ class Aggregate:
         """
         for i in [-1, 0, 1]:
             for j in [-1, 0, 1]:
+                if i == 0 and j == 0:
+                    # Do not test the current position.
+                    continue
                 # Return True as soon as it finds an aggregated position.
                 if self.contains(Position(position.x + i, position.y + j)):
                     return True
+        return False
 
     def count(self):
         """

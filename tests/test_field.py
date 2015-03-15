@@ -21,10 +21,6 @@ class TestField:
         field = Field(10, 10)
         assert field.count() == 100
 
-    def test_isAggregated(self):
-        field = Field(10, 10, 1)
-        assert field.isAggregated(0.5, 0.5)
-
     def test_countAggregated(self):
         field = Field(10, 10, 1)
         assert field.countAggregated() == 1
