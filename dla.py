@@ -16,18 +16,21 @@ def simulation(seeds, speed, width, height, particle, num_particles, total_parti
     num_particles: an int, the number of particle present simultaneously
     total_particles: an int, the number of total particle to shoot.
     """
-    anim_speed = 0.01
-    anim = dla_visualize.Visualization(width, height, anim_speed)
-    # time.sleep(5)
+    # Initialize the animation.
+    anim = dla_visualize.Visualization(width, height, 0.001)
 
     # Initialize the room.
-    f = Field(width, height, seeds)
+    field = Field(width, height, seeds)
 
     # Initialize the number of initial particles
     particles = []
     count = num_particles
     for i in range(0, num_particles):
-        particles.append(particle(f, speed))
+        particles.append(particle(field, speed))
+
+    # Initialize the time counter
+    steps = 0
+    anim.update(steps, field)
 
     # We run the simulation until all the particle has been created
     while count <= total_particles and 0 < len(particles):
@@ -40,24 +43,29 @@ def simulation(seeds, speed, width, height, particle, num_particles, total_parti
                 particles.remove(p)
                 if count < total_particles:
                     # Add a new particle if there is some more place for it.
-                    particles.append(particle(f, speed))
+                    particles.append(particle(field, speed))
                     count += 1
                 if p.aggregated:
                     update = True
 
+        # Increase the time counter
+        steps += 1
+
         if update:
             # Update the animation only if the aggregate has changed
-            if f.aggregateSize() > f.radius:
+            if field.aggregateSize() > field.radius:
                 # if the aggregate arrived to the radius size, we double the
                 # size of the field and put the aggregate into this new field.
                 width *= 2
                 height *= 2
-                new_f = Field(width, height)
-                new_f.aggregates = f.aggregates
-                f = new_f
+                new_field = Field(width, height)
+                new_field.aggregates = field.aggregates
+                field = new_field
                 anim.init(width, height)
 
-            anim.update(f, particles)
+            anim.update(steps, field)
+        else:
+            anim.update(steps)
 
     print "Done"
     anim.update(f, particles)
