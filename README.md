@@ -2,7 +2,7 @@ Diffusion Limited Aggregation with python (pyDLA)
 =================================================
 
 [Blog](http://epacio.tumblr.com/post/114183829153/dla)
-**| **
+**|**
 [![Build Status](https://travis-ci.org/sp4ce/pyDLA.svg)](https://travis-ci.org/sp4ce/pyDLA)
 
 #Run it
