@@ -3,7 +3,7 @@ import time
 
 from Tkinter import *
 
-class Visualization:
+class Animation:
 
     def __init__(self, width, height, delay = 0.2):
         """
@@ -24,20 +24,19 @@ class Visualization:
 
         # Draw some status text
         self.particles = None
-        self.text = self.w.create_text(25, 0, anchor = NW, text = self._status_string(0, 0))
+        self.text = self.w.create_text(25, 0, anchor = NW, text = self._status_string(0, 0, 0, 0))
 
         # Update the drawing
         self.master.update()
 
-    def _status_string(self, steps, num_aggregated_tiles = None):
+    def _status_string(self, steps, current, count, num_aggregated_tiles):
         """
         Returns an appropriate status string to print.
         """
         if not num_aggregated_tiles == None:
             self.num_aggregated_tiles = num_aggregated_tiles
-            self.percent_aggregated = 100 * num_aggregated_tiles / (self.width * self.height)
-        return "Time: %04d; %d particules (%d%%) aggregated" % \
-            (steps, self.num_aggregated_tiles, self.percent_aggregated)
+        return "Time: %04d; %d particles of a total of %d particles (current: %d)" % \
+            (steps, self.num_aggregated_tiles, count, current)
 
     def _map_coords(self, x, y):
         """
@@ -60,7 +59,7 @@ class Visualization:
         x2, y2 = self._map_coords(width / 2, -height / 2)
         self.w.create_rectangle(x1, y1, x2, y2, fill = "white")
 
-    def update(self, steps, field = None):
+    def update(self, steps, current, count, field = None):
         """
         Redraws the visualization with the specified field and particles state.
         """
@@ -85,7 +84,7 @@ class Visualization:
         # Update text
         self.w.delete(self.text)
         count_aggregated = field.countAggregated() if not field == None else None
-        text = self._status_string(steps, count_aggregated)
+        text = self._status_string(steps, current, count, count_aggregated)
         self.text = self.w.create_text(25, 0, anchor= NW, text = text)
 
         # Update the canvas

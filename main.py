@@ -1,5 +1,4 @@
 from classes import *
 
-import dla
-
-dla.simulation(1, 1, 50, 50, StandardParticle, 1000, 500000)
+simulation = Simulation(1, 50, 50)
+simulation.run(StandardParticle, 1000, 5000)
